@@ -1,0 +1,38 @@
+{
+  "org": "acme-lab.example",
+  "network": "192.0.2.0/24",
+  "subnets": {
+    "core": {"range": "192.0.2.0/28", "label": "core-services"},
+    "dmz": {"range": "192.0.2.32/28", "label": "internet-facing"},
+    "users": {"range": "192.0.2.64/28", "label": "user-workstations"},
+    "iot": {"range": "192.0.2.224/28", "label": "iot-devices"}
+  },
+  "legitimate_services": [
+    {"name": "web", "host": "192.0.2.33", "port": 443, "proto": "https", "label": "corp-web"},
+    {"name": "mail", "host": "192.0.2.34", "port": 25, "proto": "smtp", "label": "corp-mail"},
+    {"name": "vpn", "host": "192.0.2.35", "port": 443, "proto": "https", "label": "corp-vpn"},
+    {"name": "appdb", "host": "192.0.2.3", "port": 5432, "proto": "postgres", "label": "core-appdb"},
+    {"name": "ldap", "host": "192.0.2.2", "port": 389, "proto": "ldap", "label": "core-ldap"}
+  ],
+  "fake_services": [
+    {"name": "fake-backup", "host": "192.0.2.9", "port": 22, "proto": "ssh", "label": "backup-nas", "bait": "admin/backup"},
+    {"name": "fake-admin", "host": "192.0.2.10", "port": 8443, "proto": "https", "label": "jump-host", "bait": "admin:workstation"},
+    {"name": "fake-db", "host": "192.0.2.11", "port": 5432, "proto": "postgres", "label": "ops-db", "bait": "ops:readonly"},
+    {"name": "fake-ftp", "host": "192.0.2.12", "port": 21, "proto": "ftp", "label": "file-share", "bait": "anonymous"},
+    {"name": "fake-iot", "host": "192.0.2.226", "port": 8080, "proto": "http", "label": "cameras", "bait": "root:toor"}
+  ],
+  "honeytokens": [
+    {"kind": "fake_credential", "service": "appdb", "user": "svc-report", "secret": "S3cret!x", "placed": "/var/backups/db.ini"},
+    {"kind": "api_key", "service": "billing-api", "key": "ak-fake-9f2c", "placed": "config/billing.yaml"},
+    {"kind": "session_cookie", "service": "corp-web", "cookie": "sid-fake-7b1a", "placed": "browser-cache"},
+    {"kind": "fake_vpn_config", "service": "corp-vpn", "entry": "vpn-gateway.example.com", "placed": "networking/"}
+  ],
+  "decoy_paths": [
+    {"path": "/backup/", "host": "192.0.2.9", "note": "decoy backup listing"},
+    {"path": "/admin/dashboard/", "host": "192.0.2.10", "note": "fake admin console"},
+    {"path": "/config/db.json", "host": "192.0.2.10", "note": "bait credentials file"},
+    {"path": "/payroll/", "host": "192.0.2.33", "note": "honeypot payroll dir"},
+    {"path": "/.git/config", "host": "192.0.2.33", "note": "trap for scaffold scanners"},
+    {"path": "/factory/cameras/", "host": "192.0.2.226", "note": "iot decoy endpoint"}
+  ]
+}

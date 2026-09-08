@@ -1,0 +1,5 @@
+{
+  "model": "fixtures/network-model.json",
+  "gate_threshold": 80.0,
+  "report": "reports/report.md"
+}
